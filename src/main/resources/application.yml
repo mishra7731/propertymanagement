@@ -1,0 +1,45 @@
+#spring.application.name=propertyservice
+
+spring:
+  application:
+    name: propertyservice
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/cre}
+    username: ${SPRING_DATASOURCE_USERNAME:cre}
+    password: ${SPRING_DATASOURCE_PASSWORD:cre}
+  jpa:
+    hibernate:
+      ddl-auto: validate          # schema is owned by Flyway, never Hibernate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  # Point this at your IdP (Auth0/Keycloak/Cognito) in deployed environments.
+  # Left empty for local dev so the app boots without JWT validation.
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    org.flywaydb: INFO
